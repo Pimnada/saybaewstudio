@@ -6,7 +6,6 @@ require_once __DIR__ . '/auth.php';
 $keys = [
     'site_name', 'site_name_en', 'site_tagline', 'site_description',
     'hero_title', 'hero_text', 'hero_cta1_label', 'hero_cta1_url', 'hero_cta2_label', 'hero_cta2_url',
-    'about_title', 'about_points',
     'cta_title', 'cta_text',
     'meta_keywords', 'ga_id',
     'albums_per_page', 'stat_years', 'stat_jobs', 'stat_schools', 'stat_photos',
@@ -106,16 +105,8 @@ include __DIR__ . '/inc/admin-head.php';
   </div>
 
   <div class="panel">
-    <div class="panel__head"><h2 class="panel__title">แถบ "ระบบอัลบั้ม" และแถบชวนติดต่อ</h2></div>
+    <div class="panel__head"><h2 class="panel__title">แถบชวนติดต่อท้ายหน้า</h2></div>
     <div class="panel__body">
-      <div class="field">
-        <label for="st-about-title">หัวข้อแถบระบบอัลบั้ม</label>
-        <input id="st-about-title" type="text" name="about_title" value="<?= e(setting('about_title')) ?>">
-      </div>
-      <div class="field">
-        <label for="st-about-points">รายการติ๊กถูก (บรรทัดละ 1 ข้อ)</label>
-        <textarea id="st-about-points" name="about_points" rows="7"><?= e(setting('about_points')) ?></textarea>
-      </div>
       <div class="grid grid-2" style="gap:0 16px;">
         <div class="field">
           <label for="st-cta-title">หัวข้อแถบชวนติดต่อ</label>
