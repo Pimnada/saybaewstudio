@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 267" width="400" height="267">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#EFE8DA"/>
+      <stop offset="1" stop-color="#DCD0BA"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="267" fill="url(#g)"/>
+  <g fill="none" stroke="#B0803A" stroke-width="3" stroke-linejoin="round" opacity=".55">
+    <path d="M160 112h12l4.6-7h46.8l4.6 7H240a7 7 0 0 1 7 7v28a7 7 0 0 1-7 7h-80a7 7 0 0 1-7-7v-28a7 7 0 0 1 7-7z"/>
+    <circle cx="200" cy="133" r="14"/>
+  </g>
+  <text x="200" y="185" text-anchor="middle" font-family="sans-serif" font-size="13"
+        fill="#A2988A" letter-spacing="2">saybaewstudio</text>
+</svg>

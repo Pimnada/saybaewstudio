@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /admin.php
+Disallow: /admin-
+Disallow: /api-
+Disallow: /dl.php
+Disallow: /uploads/tmp/
+Allow: /
+
+Sitemap: https://saybaewstudio.com/sitemap.php

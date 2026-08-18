@@ -1,0 +1,8 @@
+config.php
+uploads/
+*.sqlite
+*.sqlite-journal
+.DS_Store
+.claude/
+node_modules/
+*.log
