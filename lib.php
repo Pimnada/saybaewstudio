@@ -171,7 +171,14 @@ function fmt_bytes(int $bytes, int $decimals = 2): string
         $n /= 1024;
         $i++;
     }
-    return number_format($n, $i < 2 ? 0 : $decimals) . ' ' . $units[$i];
+
+    // Round figures read better without the decimals: a 64 MB limit should say
+    // "64 MB", not "64.00 MB".
+    $places = $i < 2 ? 0 : $decimals;
+    if ($places > 0 && abs($n - round($n)) < 0.005) {
+        $places = 0;
+    }
+    return number_format($n, $places) . ' ' . $units[$i];
 }
 
 function fmt_num(int $n): string
