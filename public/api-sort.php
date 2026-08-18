@@ -15,7 +15,7 @@ csrf_check();
 
 const SORTABLE_TABLES = [
     'reviews', 'faqs', 'banners', 'menus', 'services',
-    'categories', 'photos', 'videos', 'folders', 'autoreplies',
+    'categories', 'photos', 'videos', 'folders',
 ];
 
 $table = (string) ($_GET['table'] ?? $_POST['table'] ?? '');

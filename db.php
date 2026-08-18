@@ -287,17 +287,6 @@ function db_migrate(PDO $pdo): void
             read_at DATETIME DEFAULT NULL
         ){SUFFIX}",
 
-        'autoreplies' => "CREATE TABLE IF NOT EXISTS autoreplies (
-            id {PK},
-            keyword VARCHAR(190) NOT NULL,
-            reply TEXT,
-            match_type VARCHAR(20) NOT NULL DEFAULT 'contains',
-            channel VARCHAR(20) NOT NULL DEFAULT 'all',
-            hits INT NOT NULL DEFAULT 0,
-            sort_order INT NOT NULL DEFAULT 0,
-            status VARCHAR(20) NOT NULL DEFAULT 'active',
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        ){SUFFIX}",
 
         'visits' => "CREATE TABLE IF NOT EXISTS visits (
             id {PK},

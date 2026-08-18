@@ -18,7 +18,6 @@ function seed_everything(PDO $pdo): void
     seed_faqs($pdo);
     seed_pages($pdo);
     seed_menus($pdo);
-    seed_autoreplies($pdo);
     seed_articles($pdo);
 }
 
@@ -81,7 +80,6 @@ function seed_settings(PDO $pdo): void
         'watermark_enabled'=> '0',
         'download_enabled' => '1',
         'notify_email'     => 'saybaewstudio@gmail.com',
-        'autoreply_enabled'=> '1',
         'floating_line'    => '1',
     ];
 
@@ -261,24 +259,6 @@ function seed_menus(PDO $pdo): void
     $st = $pdo->prepare('INSERT INTO menus (label, url, location, sort_order) VALUES (?, ?, ?, ?)');
     foreach ($rows as $r) {
         $st->execute($r);
-    }
-}
-
-function seed_autoreplies(PDO $pdo): void
-{
-    $rows = [
-        ['ราคา', "ราคาขึ้นกับประเภทงานและระยะเวลาค่ะ\n· งานในกรุงเทพฯ ครึ่งวัน เริ่มต้น 3,500 บาท\n· เต็มวัน เริ่มต้น 6,000 บาท\nรวมไฟล์ขนาดเต็มทั้งหมดและอัลบั้มออนไลน์แล้ว รบกวนแจ้งวันที่กับสถานที่ เดี๋ยวเสนอราคาให้แม่นยำค่ะ"],
-        ['คิว', 'รบกวนแจ้งวันที่จัดงานและสถานที่ค่ะ เดี๋ยวทีมงานเช็กคิวให้ภายในไม่เกิน 1 ชั่วโมงในเวลาทำการ'],
-        ['กี่วัน', 'ปกติได้รูปภายใน 5–7 วันทำการหลังจบงานค่ะ ถ้าต้องการรูปพรีวิวด่วนสำหรับโพสต์ในวันงาน แจ้งได้เลย'],
-        ['ต่างจังหวัด', 'รับงานต่างจังหวัดค่ะ คิดค่าเดินทางตามระยะทางจริง แจ้งจังหวัดมาได้เลยเดี๋ยวคำนวณให้'],
-        ['สวัสดี', 'สวัสดีค่ะ สายแบ้วสตูดิโอยินดีให้บริการค่ะ สนใจถ่ายงานประเภทไหน วันที่เท่าไหร่ดีคะ'],
-    ];
-    $st = $pdo->prepare(
-        'INSERT INTO autoreplies (keyword, reply, match_type, channel, sort_order, status)
-         VALUES (?, ?, ?, ?, ?, ?)'
-    );
-    foreach ($rows as $i => $r) {
-        $st->execute([$r[0], $r[1], 'contains', 'all', $i + 1, 'active']);
     }
 }
 

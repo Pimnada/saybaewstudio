@@ -55,7 +55,6 @@ $adminNav = [
     ],
     'ลูกค้า' => [
         ['admin-messages.php',  'ข้อความจากลูกค้า',   'inbox',   'messages'],
-        ['admin-autoreply.php', 'ตั้งค่าแชทอัตโนมัติ',  'robot'],
         ['admin-emails.php',    'อีเมลที่ส่งออก',      'mail'],
     ],
     'ตั้งค่า' => [
