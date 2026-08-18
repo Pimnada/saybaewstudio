@@ -6,6 +6,20 @@
 
 require_once __DIR__ . '/db.php';
 
+/**
+ * Two roots, deliberately separate.
+ *
+ * APP_ROOT holds the code and everything that must never be reachable over
+ * HTTP — includes, email templates, docs, tools, the dev database.
+ * WEB_ROOT is the only directory the web server is pointed at.
+ *
+ * That split is what lets the server deploy straight from git: the repository
+ * can carry CLAUDE.md, docs/ and deploy.sh without nginx handing them to
+ * anyone who asks, which is exactly what happened once on tobwai.
+ */
+define('APP_ROOT', __DIR__);
+define('WEB_ROOT', __DIR__ . '/public');
+
 date_default_timezone_set('Asia/Bangkok');
 
 if (!defined('APP_DEBUG') || !APP_DEBUG) {
@@ -51,7 +65,7 @@ function url(string $path = ''): string
 
 function asset(string $path): string
 {
-    $file = __DIR__ . '/' . ltrim($path, '/');
+    $file = WEB_ROOT . '/' . ltrim($path, '/');
     $v    = is_file($file) ? filemtime($file) : time();
     return url($path) . '?v=' . $v;
 }
@@ -261,9 +275,15 @@ function unique_slug(string $table, string $text, ?int $ignoreId = null): string
 
 // ------------------------------------------------------------------ uploads --
 
+/**
+ * Uploads live inside the web root because the browser fetches the thumbnails
+ * and previews directly — routing every image through PHP would be slower for
+ * no gain. Original files are still only reachable through dl.php, which checks
+ * the album's access settings first.
+ */
 function upload_path(string $rel = ''): string
 {
-    return __DIR__ . '/uploads/' . ltrim($rel, '/');
+    return WEB_ROOT . '/uploads/' . ltrim($rel, '/');
 }
 
 function upload_url(?string $rel): string

@@ -1,5 +1,5 @@
 config.php
-uploads/
+public/uploads/
 *.sqlite
 *.sqlite-journal
 .DS_Store

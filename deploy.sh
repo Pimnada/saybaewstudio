@@ -1,15 +1,16 @@
 #!/bin/bash
 #
-# Deploy saybaewstudio.com to its Cloudways app.
+# Fallback deploy for saybaewstudio.com.
+#
+# The normal route is now Cloudways pulling from GitHub — see DEPLOY.md. This
+# script stays for the times that is not an option: the panel is down, a change
+# has to go out before it is committed, or a git deployment needs undoing fast.
 #
 #   ./deploy.sh --dry-run   show what would be sent, send nothing
 #   ./deploy.sh             lint, rsync, verify
 #
-# This script is never itself deployed — *.sh is in the exclude list below.
-#
-# BEFORE THE FIRST RUN, set APP_ID to the Cloudways application id for
-# saybaewstudio. It is deliberately left blank so a mistyped run cannot
-# overwrite one of the other four sites on the same server.
+# Set APP_ID first. It is deliberately blank so a mistyped run cannot overwrite
+# one of the other sites sharing this server:
 #
 #   xaxvhfthsr = tobwai      hrzbghjjrd = sorndekcoding
 #   dxmjbjbqrf = laaklaai    xpbtsfxngq = maeranie2022
@@ -52,49 +53,53 @@ if ! ssh "$SSH_HOST" "test -d $TARGET"; then
   echo "STOP: ไม่พบโฟลเดอร์ $TARGET บนเซิร์ฟเวอร์"
   exit 1
 fi
-if ssh "$SSH_HOST" "test -f $TARGET/index.php"; then
-  if ! ssh "$SSH_HOST" "grep -q -m1 saybaew $TARGET/index.php"; then
-    echo "STOP: $TARGET/index.php ไม่มีคำว่า saybaew — อาจเป็นแอปของเว็บอื่น"
+if ssh "$SSH_HOST" "test -f $TARGET/public/index.php"; then
+  if ! ssh "$SSH_HOST" "grep -q -m1 saybaew $TARGET/public/index.php"; then
+    echo "STOP: $TARGET/public/index.php ไม่มีคำว่า saybaew — อาจเป็นแอปของเว็บอื่น"
     exit 1
   fi
   echo "   ok — ปลายทางเป็น saybaewstudio"
 else
-  echo "   (ยังไม่มี index.php บนเซิร์ฟเวอร์ — ถือว่าเป็นการ deploy ครั้งแรก)"
+  echo "   (ยังไม่มี public/index.php บนเซิร์ฟเวอร์ — ถือว่าเป็นการ deploy ครั้งแรก)"
 fi
 
 # ---------------------------------------------------------------- 3. rsync ---
-# config.php holds the production database credentials and uploads/ holds the
-# customers' photographs — neither may ever be overwritten from a laptop.
-# *.md / *.sh / docs / tools stay out of the web root because nginx serves them
-# to anyone who asks, and .htaccess cannot stop it on Cloudways.
+# The whole repository goes up, including docs/ and *.md. That is safe now: the
+# app's webroot is public_html/public, so nginx cannot reach anything above it.
+# Only two things must never be overwritten from a laptop — the production
+# credentials and the customers' photographs.
 echo "→ ส่งไฟล์ขึ้นเซิร์ฟเวอร์..."
 rsync -az $DRY --itemize-changes \
   --exclude '.git' \
   --exclude '.claude' \
   --exclude 'config.php' \
-  --exclude 'uploads' \
+  --exclude 'public/uploads' \
   --exclude '*.sqlite' \
   --exclude '*.sqlite-wal' \
   --exclude '*.sqlite-shm' \
   --exclude '.DS_Store' \
-  --exclude '*.md' \
-  --exclude 'docs' \
-  --exclude '*.sh' \
-  --exclude 'tools' \
   ./ "$SSH_HOST:$TARGET/"
 
 [[ -n "$DRY" ]] && { echo "(dry run — ไม่ได้ส่งอะไรขึ้นจริง)"; exit 0; }
 
 # --------------------------------------------------------------- 4. verify ---
-echo "→ ตรวจว่าเอกสารไม่หลุดขึ้นเว็บ..."
-leaked=$(ssh "$SSH_HOST" "ls $TARGET/*.md $TARGET/*.sh $TARGET/docs 2>/dev/null | head -5" || true)
-if [[ -n "$leaked" ]]; then
-  echo "   ⚠ พบไฟล์ที่ไม่ควรอยู่บนเซิร์ฟเวอร์:"
-  echo "$leaked"
-  echo "   ลบด้วย: ssh $SSH_HOST 'rm -rf $TARGET/docs $TARGET/*.md $TARGET/*.sh'"
-else
-  echo "   ok"
+# The webroot boundary is the only thing keeping docs off the web, so check it
+# rather than trusting it.
+echo "→ ตรวจว่าเอกสารเปิดจากภายนอกไม่ได้..."
+leak=0
+for path in CLAUDE.md README.md deploy.sh config.php lib.php docs/ICON-PROMPTS.md; do
+  code=$(curl -s -o /dev/null -w '%{http_code}' "${LIVE_URL}${path}?cb=$RANDOM" || echo 000)
+  if [[ "$code" == "200" ]]; then
+    echo "   ⚠ /$path เปิดอ่านได้จากภายนอก (HTTP 200)"
+    leak=1
+  fi
+done
+if [[ $leak -eq 1 ]]; then
+  echo "   STOP: webroot ของแอปยังไม่ได้ชี้ไปที่ public/"
+  echo "   แก้ที่ Cloudways → Application Settings → Webroot = public"
+  exit 1
 fi
+echo "   ok — เอกสารอยู่นอก webroot"
 
 echo "→ ตรวจว่าเว็บยังตอบ 200..."
 code=$(curl -s -o /tmp/sbs-deploy-check -w '%{http_code}' "${LIVE_URL}?cachebust=$RANDOM" || echo 000)

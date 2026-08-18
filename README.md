@@ -8,7 +8,7 @@
 ## เริ่มใช้งานบนเครื่อง
 
 ```bash
-cd ~/Sites/saybaewstudio && php -S localhost:8210
+cd ~/Sites/saybaewstudio/public && php -S localhost:8210
 ```
 
 เปิด http://localhost:8210 — ตารางฐานข้อมูลและเนื้อหาตั้งต้นถูกสร้างเองในคำขอแรก
@@ -32,20 +32,24 @@ php tools/demo-photos.php
 
 ## โครงสร้าง
 
-ไฟล์ PHP วางแบนที่ root หนึ่งไฟล์ต่อหนึ่งหน้า ไม่มี router ไม่มี autoloader
+แยกสองชั้น: `public/` คือ webroot ที่ nginx เห็น ส่วนโค้ดที่เหลืออยู่สูงกว่านั้น
+และเปิดจากอินเทอร์เน็ตไม่ได้ ดูเหตุผลใน [DEPLOY.md](DEPLOY.md)
+
+ไฟล์ PHP วางแบนใน `public/` หนึ่งไฟล์ต่อหนึ่งหน้า ไม่มี router ไม่มี autoloader
 
 | | |
 |---|---|
-| หน้าเว็บสาธารณะ | `index.php`, `albums.php`, `album.php`, `services.php`, `about.php`, `reviews.php`, `blog.php`, `article.php`, `contact.php`, `page.php` |
-| หลังบ้าน | `admin*.php` — 20 หน้า |
-| API (เรียกจาก JS) | `api-upload.php`, `api-photos.php`, `api-sort.php` |
-| แกนกลาง | `db.php` (schema + migration), `lib.php` (helper), `auth.php` (session + CSRF), `image.php` (ย่อรูป), `mailer.php` |
-| ส่วนที่ใช้ร่วมกัน | `inc/header.php`, `inc/footer.php`, `inc/admin-head.php`, `inc/admin-foot.php`, `inc/icons.php`, `inc/contact-band.php` |
-| ดีไซน์ | `assets/css/base.css` = ตัวแปรสีและคอมโพเนนต์ที่ใช้ร่วมกันทั้งเว็บ · `site.css` = หน้าสาธารณะ · `admin.css` = หลังบ้าน |
-| อีเมล | `emails/` — layout เดียว 6 เทมเพลต |
-| ไม่ deploy | `docs/`, `tools/`, `*.sh`, `*.md` |
+| หน้าเว็บสาธารณะ | `public/index.php`, `albums.php`, `album.php`, `services.php`, `about.php`, `reviews.php`, `blog.php`, `article.php`, `contact.php`, `page.php` |
+| หลังบ้าน | `public/admin*.php` — 20 หน้า |
+| API (เรียกจาก JS) | `public/api-upload.php`, `api-photos.php`, `api-sort.php` |
+| ไฟล์ที่เบราว์เซอร์โหลดตรง | `public/assets/`, `public/uploads/`, `public/robots.txt` |
+| แกนกลาง (นอก webroot) | `db.php` (schema + migration), `lib.php` (helper), `auth.php` (session + CSRF), `image.php` (ย่อรูป), `mailer.php` |
+| ส่วนที่ใช้ร่วมกัน (นอก webroot) | `inc/header.php`, `inc/footer.php`, `inc/admin-head.php`, `inc/admin-foot.php`, `inc/icons.php`, `inc/contact-band.php` |
+| ดีไซน์ | `public/assets/css/base.css` = ตัวแปรสีและคอมโพเนนต์ที่ใช้ร่วมกันทั้งเว็บ · `site.css` = หน้าสาธารณะ · `admin.css` = หลังบ้าน |
+| อีเมล (นอก webroot) | `emails/` — layout เดียว 6 เทมเพลต |
+| เอกสารและสคริปต์ (นอก webroot) | `docs/`, `tools/`, `*.md`, `deploy.sh` |
 
-**สีทั้งหมดอยู่ใน `base.css` ที่เดียว** ทั้งหน้าเว็บและหลังบ้านใช้ตัวแปรชุดเดียวกัน
+**สีทั้งหมดอยู่ใน `public/assets/css/base.css` ที่เดียว** ทั้งหน้าเว็บและหลังบ้านใช้ตัวแปรชุดเดียวกัน
 แก้สีที่นั่นแล้วเปลี่ยนทั้งเว็บ รวมถึงโหมดกลางคืน — ไม่มีรายการ override แยกต่อหน้า
 
 ---
@@ -80,21 +84,9 @@ php tools/demo-photos.php
 ยังไม่ได้ทำ — ต้องมีสองอย่างก่อน
 
 1. **จดโดเมน `saybaewstudio.com`** (ตรวจแล้วว่างอยู่ ณ 18 ส.ค. 2569)
-2. **สร้าง Cloudways application ใหม่** สำหรับเว็บนี้ แล้วเอา application id
-   ไปใส่ในตัวแปร `APP_ID` ที่หัวไฟล์ `deploy.sh`
+2. **สร้าง Cloudways application ใหม่** สำหรับเว็บนี้
 
-จากนั้น สร้าง `config.php` บนเซิร์ฟเวอร์ (คัดลอกจาก `config.sample.php`) โดยตั้ง
-`DB_DRIVER` เป็น `mysql`, ใส่รหัสฐานข้อมูลจริง, `SITE_URL` เป็น `https://saybaewstudio.com`,
-`APP_DEBUG` เป็น `false` แล้วรัน
-
-```bash
-cd ~/Sites/saybaewstudio && ./deploy.sh --dry-run
-```
-
-ดูว่าจะส่งอะไรบ้าง ถ้าถูกต้องค่อยรันโดยไม่ใส่ `--dry-run`
-
-`deploy.sh` จะ lint ไฟล์ PHP ทุกไฟล์, ยืนยันว่าปลายทางเป็น saybaewstudio จริง,
-rsync โดย **ไม่แตะ `config.php` และ `uploads/`**, แล้วตรวจว่าไม่มี `.md`/`.sh`/`docs/`
-หลุดขึ้น web root และเว็บยังตอบ 200 พร้อมไม่มี PHP fatal ในหน้า
+ขั้นตอนทั้งหมดอยู่ใน **[DEPLOY.md](DEPLOY.md)** — deploy ด้วยการ push ขึ้น GitHub
+แล้วให้ Cloudways ดึงเอง โดยตั้ง webroot ของแอปเป็น `public`
 
 ตารางฐานข้อมูลสร้างเองในคำขอแรกผ่าน `db.php` — ไม่มีขั้นตอน migrate แยก

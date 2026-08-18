@@ -11,16 +11,32 @@ framework, Composer, or a build pipeline without asking.
 
 ## Layout
 
-Flat PHP at the repo root, one file per page, no router and no autoloader.
+**Two levels, and the split is the security boundary.** `public/` is the only
+directory the web server is pointed at; everything above it is unreachable over
+HTTP. That is what lets Cloudways deploy straight from git without publishing
+`CLAUDE.md`, `docs/` or `deploy.sh` — the leak that happened on tobwai on
+2026-08-11 and is still live on maeranie2022.com today. See `DEPLOY.md`.
+
+Flat PHP inside `public/`, one file per page, no router and no autoloader.
 
 | | |
 |---|---|
-| Public | `index.php`, `albums.php`, `album.php`, `services.php`, `about.php`, `reviews.php`, `blog.php`, `article.php`, `contact.php`, `page.php`, `sitemap.php` |
-| Admin | `admin*.php` (20 pages), gated by `require_admin()` / `require_owner()` |
-| XHR endpoints | `api-upload.php`, `api-photos.php`, `api-sort.php` |
-| Core | `db.php`, `lib.php`, `auth.php`, `image.php`, `mailer.php`, `seed.php` |
-| Shared partials | `inc/` |
-| Never deployed | `docs/`, `tools/`, `*.sh`, `*.md` (excluded in `deploy.sh`) |
+| Public | `public/index.php`, `albums.php`, `album.php`, `services.php`, `about.php`, `reviews.php`, `blog.php`, `article.php`, `contact.php`, `page.php`, `sitemap.php` |
+| Admin | `public/admin*.php` (20 pages), gated by `require_admin()` / `require_owner()` |
+| XHR endpoints | `public/api-upload.php`, `api-photos.php`, `api-sort.php` |
+| Browser-loaded | `public/assets/`, `public/uploads/`, `public/robots.txt`, `public/.user.ini` |
+| Core, outside the webroot | `db.php`, `lib.php`, `auth.php`, `image.php`, `mailer.php`, `seed.php` |
+| Shared partials, outside the webroot | `inc/`, `emails/` |
+| Never served | `docs/`, `tools/`, `*.md`, `deploy.sh`, `config.php`, `dev.sqlite` |
+
+`lib.php` defines `APP_ROOT` and `WEB_ROOT`. Anything that resolves a filesystem
+path uses one of those — never a bare `__DIR__` that assumes the old flat layout.
+Files inside `public/` reach the core with `__DIR__ . '/../lib.php'`.
+
+**`php -S` cannot prove the boundary holds.** The dev server falls back to
+rendering `index.php` for any path it cannot find, so every URL answers 200 with
+the homepage — including `/CLAUDE.md`. Test exposure against the real site after
+deploying; `deploy.sh` already curls for it.
 
 Local dev runs on **SQLite** (`config.php` sets `DB_DRIVER = 'sqlite'`);
 production runs MySQL. `db.php` creates and patches the schema on the next
@@ -46,14 +62,14 @@ reaches the parser as a literal and throws SyntaxError. That one broke
 loaded with `defer`, so `window.SBSAdmin` does not exist while an inline
 `<script>` at the end of the body is being parsed.
 
-**Colours live only in `assets/css/base.css`.** Both the public site and the
+**Colours live only in `public/assets/css/base.css`.** Both the public site and the
 admin read the same custom properties, and dark mode is a single
 `[data-theme]` swap of those tokens. Do not start a per-page override list —
 that is the failure mode that made tobwai's dark mode unmaintainable.
 `.brand` and the theme-toggle glyph rules belong in `base.css` too, because
 the admin does not load `site.css`.
 
-**Photos are stored in three sizes.** `uploads/albums/{id}/orig/` is the
+**Photos are stored in three sizes.** `public/uploads/albums/{id}/orig/` is the
 untouched camera file and is what the customer downloads — never regenerate or
 recompress it. `preview/` is 2048px, `thumb/` is 600px. Imagick if available,
 GD otherwise. **Never shell out** — `exec()` and friends are disabled on
@@ -61,7 +77,7 @@ Cloudways, so ffmpeg/ImageMagick CLI will work locally and fail in production.
 
 **Uploads go one file per request.** nginx cuts a request body at roughly
 128 MiB, so a single POST carrying hundreds of camera JPEGs is refused
-outright. `assets/js/uploader.js` sends three concurrently with two retries.
+outright. `public/assets/js/uploader.js` sends three concurrently with two retries.
 
 **Downloads stream in chunks.** `fpassthru()` is disabled in the Cloudways FPM
 pool, and a 40 MB original must not be read into memory. Use the `fread` loop
@@ -89,30 +105,27 @@ admin can send real mail to real customers.
 
 ## Deploy
 
-Not live yet. Two prerequisites, both the owner's call:
+Not live yet. Two prerequisites, both the owner's call: register
+`saybaewstudio.com` (checked available 2026-08-18) and create a Cloudways app.
 
-1. Register `saybaewstudio.com` (checked available on 2026-08-18)
-2. Create a Cloudways application for it and put its id in `APP_ID` at the top
-   of `deploy.sh` — the script refuses to run while that is blank, on purpose
+**The route is git, not rsync** — push to GitHub, Cloudways pulls. Full steps in
+`DEPLOY.md`. The one setting that must not be skipped is
+**Application Settings → Webroot = `public`**; without it the first deployment
+publishes every document in the repo.
 
-Existing app ids on the same server, none of which is this site:
-`xaxvhfthsr` = tobwai, `hrzbghjjrd` = sorndekcoding, `dxmjbjbqrf` = laaklaai,
-`xpbtsfxngq` = maeranie2022. An rsync to the wrong one takes another site down.
+`deploy.sh` remains as an rsync fallback and refuses to run while its `APP_ID` is
+blank, on purpose — four live sites share that server, and an rsync to the wrong
+one has taken a site down before. Existing ids: `xaxvhfthsr` = tobwai,
+`hrzbghjjrd` = sorndekcoding, `dxmjbjbqrf` = laaklaai, `xpbtsfxngq` = maeranie2022.
 
-```bash
-cd ~/Sites/saybaewstudio && ./deploy.sh --dry-run
-```
-
-Never pass `--delete` to rsync. Never overwrite `config.php` or `uploads/` on
-the server. Both are already excluded.
-
----
+Never pass `--delete` to rsync. `config.php` and `public/uploads/` must never be
+overwritten from a laptop; both are already excluded.
 
 ## Local
 
 ```bash
-cd ~/Sites/saybaewstudio && php -S localhost:8210
+cd ~/Sites/saybaewstudio/public && php -S localhost:8210
 ```
 
 Admin: `admin@saybaewstudio.com` / `saybaew@2569` — change it on first deploy.
-`php tools/demo-photos.php` fills empty albums with generated placeholders.
+Run `php tools/demo-photos.php` from the app root — it fills empty albums with generated placeholders.
