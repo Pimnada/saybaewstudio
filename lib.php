@@ -179,6 +179,42 @@ function fmt_num(int $n): string
     return number_format($n);
 }
 
+/** Turn a php.ini size such as "2M" or "512K" into bytes. 0 means unlimited. */
+function ini_bytes(string $value): int
+{
+    $value = trim($value);
+    if ($value === '' || $value === '-1') {
+        return 0;
+    }
+    $unit = strtolower(substr($value, -1));
+    $n    = (int) $value;
+    return match ($unit) {
+        'g'     => $n * 1024 * 1024 * 1024,
+        'm'     => $n * 1024 * 1024,
+        'k'     => $n * 1024,
+        default => $n,
+    };
+}
+
+/**
+ * The largest single photo this server will actually accept.
+ *
+ * Both limits matter: upload_max_filesize caps the file, post_max_size caps the
+ * whole request body, and the request carries a little form data besides the
+ * photo. The smaller of the two, minus a small allowance, is the real ceiling.
+ */
+function max_upload_bytes(): int
+{
+    $file = ini_bytes((string) ini_get('upload_max_filesize'));
+    $post = ini_bytes((string) ini_get('post_max_size'));
+
+    $limits = array_filter([$file, $post > 0 ? $post - 262144 : 0]);
+    if (!$limits) {
+        return 100 * 1024 * 1024;       // both unlimited — cap it ourselves
+    }
+    return max(0, (int) min($limits));
+}
+
 function excerpt(?string $text, int $len = 140): string
 {
     $text = trim(preg_replace('/\s+/u', ' ', strip_tags((string) $text)));

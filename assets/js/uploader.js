@@ -26,8 +26,11 @@
   var folderSel  = A.$('[data-up-folder]');
 
   var CONCURRENCY = 3;
-  var MAX_BYTES   = 100 * 1024 * 1024;   // one file; nginx caps the request at ~128 MiB
   var ACCEPT      = ['image/jpeg', 'image/png', 'image/webp'];
+
+  // The real ceiling comes from the server's own php.ini, not a guess here —
+  // otherwise every oversized file costs a full round-trip before it is refused.
+  var MAX_BYTES = parseInt(zone.getAttribute('data-max-bytes'), 10) || (2 * 1024 * 1024);
 
   var queue    = [];
   var active   = 0;
@@ -60,16 +63,22 @@
     var files = Array.prototype.slice.call(fileList);
     if (!files.length) { return; }
 
-    var rejected = 0;
+    var wrongType = 0;
+    var tooBig    = 0;
     files.forEach(function (file) {
-      if (ACCEPT.indexOf(file.type) === -1) { rejected++; return; }
-      if (file.size > MAX_BYTES) { rejected++; return; }
+      if (ACCEPT.indexOf(file.type) === -1) { wrongType++; return; }
+      if (file.size > MAX_BYTES) { tooBig++; return; }
       queue.push({ file: file, row: makeRow(file) });
       total++;
     });
 
-    if (rejected) {
-      A.toast(rejected + ' ไฟล์ถูกข้าม (ต้องเป็น JPG, PNG หรือ WebP และไม่เกิน 100 MB ต่อไฟล์)', 'warn');
+    // Say which problem it was — "some files were skipped" is useless when a
+    // studio has just dropped 300 photos in and nothing happened.
+    if (wrongType) {
+      A.toast(wrongType + ' ไฟล์ไม่ใช่รูปภาพที่รองรับ (ต้องเป็น JPG, PNG หรือ WebP)', 'warn');
+    }
+    if (tooBig) {
+      A.toast(tooBig + ' ไฟล์ใหญ่เกิน ' + fmtBytes(MAX_BYTES) + ' ต่อไฟล์ จึงถูกข้ามไป', 'error');
     }
 
     summary.style.display = total ? 'flex' : 'none';

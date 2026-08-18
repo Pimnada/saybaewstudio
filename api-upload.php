@@ -15,6 +15,24 @@ require_admin();
 if (!is_post()) {
     json_out(['ok' => false, 'error' => 'ต้องส่งด้วยวิธี POST'], 405);
 }
+
+/**
+ * A body bigger than post_max_size arrives with $_POST and $_FILES already
+ * emptied by PHP. csrf_check() would then fail and report "เซสชันหมดอายุ",
+ * which sends whoever is debugging in completely the wrong direction — so the
+ * size case is caught first and named for what it is.
+ */
+$sent    = (int) ($_SERVER['CONTENT_LENGTH'] ?? 0);
+$postMax = ini_bytes((string) ini_get('post_max_size'));
+if ($postMax > 0 && $sent > $postMax && !$_POST && !$_FILES) {
+    json_out([
+        'ok'    => false,
+        'error' => 'ไฟล์ใหญ่ ' . fmt_bytes($sent) . ' เกินกว่าที่เซิร์ฟเวอร์รับได้ ('
+                 . fmt_bytes(max_upload_bytes()) . ' ต่อไฟล์) '
+                 . 'ต้องเพิ่ม upload_max_filesize และ post_max_size ใน PHP ก่อน',
+    ], 413);
+}
+
 csrf_check();
 
 $albumId = (int) ($_POST['album_id'] ?? 0);
@@ -37,7 +55,11 @@ $file = $_FILES['photo'] ?? null;
 if (!$file || ($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
     $code = $file['error'] ?? UPLOAD_ERR_NO_FILE;
     json_out(['ok' => false, 'error' => match ($code) {
-        UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE => 'ไฟล์ใหญ่เกินกว่าที่เซิร์ฟเวอร์รับได้',
+        UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE =>
+            'ไฟล์ใหญ่เกินกว่าที่เซิร์ฟเวอร์รับได้ — ขณะนี้รับได้ไม่เกิน '
+            . fmt_bytes(max_upload_bytes()) . ' ต่อไฟล์ '
+            . '(upload_max_filesize = ' . ini_get('upload_max_filesize')
+            . ', post_max_size = ' . ini_get('post_max_size') . ')',
         UPLOAD_ERR_PARTIAL   => 'ไฟล์อัปโหลดไม่ครบ กรุณาลองใหม่',
         UPLOAD_ERR_NO_FILE   => 'ไม่พบไฟล์ที่ส่งมา',
         UPLOAD_ERR_NO_TMP_DIR, UPLOAD_ERR_CANT_WRITE => 'เซิร์ฟเวอร์เขียนไฟล์ชั่วคราวไม่ได้',

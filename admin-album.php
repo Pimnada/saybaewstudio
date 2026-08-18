@@ -636,12 +636,30 @@ include __DIR__ . '/inc/admin-head.php';
         </div>
       <?php endif; ?>
 
+      <?php $maxUpload = max_upload_bytes(); ?>
       <div class="dropzone" data-dropzone data-album="<?= $albumId ?>"
-           data-endpoint="<?= e(url('api-upload.php')) ?>">
+           data-endpoint="<?= e(url('api-upload.php')) ?>"
+           data-max-bytes="<?= $maxUpload ?>">
         <?= icon('upload', '', 40) ?>
         <strong>ลากไฟล์มาวางที่นี่ หรือคลิกเพื่อเลือกไฟล์</strong>
-        <span class="text-sm">รองรับ JPG, PNG, WebP · เลือกได้ทีละหลายร้อยรูป · ไม่เกิน 100 MB ต่อไฟล์</span>
+        <span class="text-sm">
+          รองรับ JPG, PNG, WebP · เลือกได้ทีละหลายร้อยรูป ·
+          ไม่เกิน <?= e(fmt_bytes($maxUpload)) ?> ต่อไฟล์
+        </span>
       </div>
+
+      <?php if ($maxUpload < 12 * 1024 * 1024): ?>
+        <div class="alert alert--warn mt-16">
+          <?= icon('help', '', 20) ?>
+          <span>
+            เซิร์ฟเวอร์นี้รับไฟล์ได้ไม่เกิน <strong><?= e(fmt_bytes($maxUpload)) ?></strong> ต่อไฟล์
+            ซึ่งเล็กกว่าไฟล์จากกล้องทั่วไป (5–15 MB) ไฟล์ใหญ่จะอัปโหลดไม่ผ่าน —
+            ต้องเพิ่ม <code>upload_max_filesize</code> และ <code>post_max_size</code> ก่อน
+            (ตอนนี้ตั้งไว้ที่ <?= e((string) ini_get('upload_max_filesize')) ?>
+            และ <?= e((string) ini_get('post_max_size')) ?>)
+          </span>
+        </div>
+      <?php endif; ?>
       <input class="hidden" type="file" multiple accept="image/jpeg,image/png,image/webp" data-file-input>
 
       <div class="up-summary mt-16" data-up-summary style="display:none;">
