@@ -80,6 +80,8 @@ $socials = array_filter([
   </div>
 </footer>
 
+<?php include __DIR__ . '/chat-widget.php'; ?>
+
 <?php if (setting('floating_line', '1') === '1'): ?>
 <a class="float-line" href="<?= e(setting('contact_line_url', '#')) ?>" target="_blank" rel="noopener">
   <?= icon('line', '', 20) ?><span>LINE</span>
@@ -98,5 +100,8 @@ $socials = array_filter([
 </div>
 
 <script src="<?= asset('assets/js/site.js') ?>" defer></script>
+<?php if (setting('chat_enabled', '0') === '1' && trim(setting('chat_site_key', '')) !== ''): ?>
+<script src="<?= asset('assets/js/chat.js') ?>" defer></script>
+<?php endif; ?>
 </body>
 </html>

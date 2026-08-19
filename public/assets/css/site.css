@@ -640,3 +640,116 @@
   .float-line span { display: none; }
   .float-line { padding: 14px; }
 }
+
+/* ---------------------------------------------------------- chat widget --- */
+/* The panel is ours; the conversation inside it belongs to tobwai. Sits above
+   the floating LINE button and takes its place on small screens, because two
+   competing bubbles in one corner is a choice nobody makes deliberately. */
+
+.tw-chat { position: fixed; right: 20px; bottom: 20px; z-index: 320; }
+
+.tw-chat__bubble {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 18px;
+  border: 0; border-radius: 100px;
+  background: var(--gold); color: #fff;
+  font-family: inherit; font-size: 14px; font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(176,128,58,.38);
+  transition: transform .18s var(--ease), background .18s var(--ease);
+}
+.tw-chat__bubble:hover { transform: translateY(-2px); background: var(--gold-600); }
+.tw-chat.is-open .tw-chat__bubble { display: none; }
+
+.tw-chat__panel {
+  width: min(360px, calc(100vw - 40px));
+  height: min(520px, calc(100vh - 120px));
+  display: flex; flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+.tw-chat__panel[hidden] { display: none; }
+
+.tw-chat__head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 13px 14px;
+  background: var(--dark);
+  color: #fff;
+  flex: none;
+}
+.tw-chat__mark {
+  width: 34px; height: 34px; flex: none;
+  border: 1.5px solid var(--gold); border-radius: 50%;
+  display: grid; place-items: center; color: var(--gold);
+}
+.tw-chat__title { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.tw-chat__title strong { font-size: 14px; line-height: 1.3; }
+.tw-chat__title small { font-size: 11px; color: var(--on-dark-mute); line-height: 1.4; }
+.tw-chat__close {
+  width: 30px; height: 30px; flex: none;
+  display: grid; place-items: center;
+  border: 0; border-radius: 8px;
+  background: rgba(255,255,255,.1); color: #fff; cursor: pointer;
+}
+.tw-chat__close:hover { background: rgba(255,255,255,.2); }
+
+.tw-chat__log {
+  flex: 1; overflow-y: auto;
+  padding: 14px;
+  display: flex; flex-direction: column; gap: 9px;
+  background: var(--bg-2);
+}
+
+.tw-msg {
+  max-width: 84%;
+  padding: 9px 13px;
+  border-radius: 14px;
+  font-size: 14px;
+  line-height: 1.7;
+  text-align: left;          /* never inherit centring from a surrounding section */
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.tw-msg--in  { align-self: flex-start; background: var(--surface); border: 1px solid var(--line); color: var(--ink); }
+.tw-msg--out { align-self: flex-end;   background: var(--gold);    color: #fff; }
+.tw-msg--err { align-self: center; background: var(--danger-bg); color: var(--danger);
+               border: 1px solid rgba(200,68,58,.25); font-size: 13px; text-align: center; max-width: 100%; }
+.tw-msg--typing { color: var(--muted); font-style: italic; }
+
+.tw-chat__form {
+  display: flex; gap: 8px; flex: none;
+  padding: 10px;
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+}
+.tw-chat__form input { flex: 1; padding: 9px 12px; font-size: 14px; }
+.tw-chat__form button {
+  width: 40px; flex: none;
+  display: grid; place-items: center;
+  border: 0; border-radius: var(--r-sm);
+  background: var(--gold); color: #fff; cursor: pointer;
+}
+.tw-chat__form button:hover { background: var(--gold-600); }
+.tw-chat__form button:disabled { opacity: .5; cursor: not-allowed; }
+
+.tw-chat__foot {
+  margin: 0; padding: 7px 10px;
+  font-size: 11px; text-align: center;
+  color: var(--faint); background: var(--surface);
+  border-top: 1px solid var(--line-soft);
+  flex: none;
+}
+
+/* With chat on, the LINE button stacks above the bubble rather than sitting on
+   top of it — and gets out of the way entirely once the panel is open, since a
+   tall panel would otherwise bury it half-visible at the edge. */
+.tw-chat ~ .float-line { bottom: 84px; }
+.tw-chat.is-open ~ .float-line { display: none; }
+
+@media (max-width: 640px) {
+  .tw-chat { right: 14px; bottom: 14px; }
+  .tw-chat ~ .float-line { bottom: 78px; right: 14px; }
+}

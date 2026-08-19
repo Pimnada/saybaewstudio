@@ -1,6 +1,6 @@
 <?php
 /**
- * Free-text reply written by staff on admin-messages.php.
+ * Free-text reply to a customer, sent by staff.
  * Vars: name, body, original (their message), staff_name, subject_override
  */
 require_once __DIR__ . '/_parts.php';

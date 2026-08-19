@@ -27,7 +27,6 @@ $delta  = $prev30 > 0 ? round(($last30 - $prev30) / $prev30 * 100, 1) : null;
 $totalDownloads = (int) $pdo->query('SELECT COALESCE(SUM(downloads), 0) FROM albums')->fetchColumn();
 $totalAlbums    = (int) $pdo->query('SELECT COUNT(*) FROM albums')->fetchColumn();
 $totalPhotos    = (int) $pdo->query('SELECT COUNT(*) FROM photos')->fetchColumn();
-$newMessages    = (int) $pdo->query("SELECT COUNT(*) FROM messages WHERE status = 'new'")->fetchColumn();
 
 // Thirty-day visit chart.
 $st = $pdo->prepare('SELECT day, COUNT(*) AS n FROM visits WHERE day >= ? GROUP BY day');
@@ -50,10 +49,6 @@ $recentAlbums = $pdo->query(
 
 $recentPhotos = $pdo->query(
     'SELECT * FROM photos ORDER BY id DESC LIMIT 12'
-)->fetchAll();
-
-$recentMessages = $pdo->query(
-    'SELECT * FROM messages ORDER BY id DESC LIMIT 5'
 )->fetchAll();
 
 $topAlbums = $pdo->query(
@@ -183,34 +178,6 @@ $topAlbums = $pdo->query(
                     <?= $a['status'] === 'published' ? 'เผยแพร่' : 'ร่าง' ?>
                   </span>
                 </td>
-              </tr>
-            <?php endforeach; ?>
-            </tbody>
-          </table>
-        <?php endif; ?>
-      </div>
-    </div>
-
-    <div class="panel">
-      <div class="panel__head">
-        <h2 class="panel__title">ข้อความล่าสุด</h2>
-        <?php if ($newMessages): ?><span class="badge badge--danger"><?= $newMessages ?> ใหม่</span><?php endif; ?>
-        <span class="spacer"></span>
-        <a class="btn btn--light btn--sm" href="<?= e(url('admin-messages.php')) ?>">ทั้งหมด</a>
-      </div>
-      <div class="panel__body panel__body--flush">
-        <?php if (!$recentMessages): ?>
-          <p class="text-sm text-muted" style="padding:20px;">ยังไม่มีข้อความจากลูกค้า</p>
-        <?php else: ?>
-          <table class="tbl">
-            <tbody>
-            <?php foreach ($recentMessages as $m): ?>
-              <tr>
-                <td>
-                  <a class="fw-700" href="<?= e(url('admin-messages.php?id=' . $m['id'])) ?>"><?= e($m['name']) ?></a>
-                  <div class="text-xs text-faint"><?= e(excerpt($m['detail'] ?: $m['job_type'], 44)) ?></div>
-                </td>
-                <td class="text-right text-xs text-faint" style="width:96px;"><?= e(time_ago($m['created_at'])) ?></td>
               </tr>
             <?php endforeach; ?>
             </tbody>

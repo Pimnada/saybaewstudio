@@ -21,5 +21,12 @@ echo em_panel(
     . em_row('รายละเอียด', $detail ?? '')
 );
 
-echo em_button('เปิดในหน้าแอดมิน', url('admin-messages.php?id=' . (int) ($message_id ?? 0)));
+// The inbox page was removed when chat moved to tobwai, so this letter IS the
+// record of the enquiry — reply to it directly rather than linking to a page
+// that no longer exists.
+if (!empty($email)) {
+    echo em_button('ตอบกลับลูกค้าทางอีเมล', 'mailto:' . $email);
+} elseif (!empty($phone)) {
+    echo em_button('โทรกลับหาลูกค้า', 'tel:' . preg_replace('/[^0-9+]/', '', $phone));
+}
 echo em_p('<span style="font-size:13px;color:#7C7267;">ตอบกลับภายใน 1 ชั่วโมงในเวลาทำการช่วยให้ลูกค้าตัดสินใจจองคิวได้เร็วขึ้นมาก</span>');
