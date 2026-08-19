@@ -60,16 +60,23 @@ $headerMenu = db()->query(
 <link rel="stylesheet" href="<?= asset('assets/css/site.css') ?>">
 
 <script>
-  // Apply the saved theme before first paint so the page never flashes white.
-  // ?theme=light|dark forces one for this page view only — handy for checking
-  // both palettes without touching the visitor's saved choice.
+  // Apply the saved theme before first paint so the page never flashes.
+  //
+  // Light is the default, and prefers-color-scheme is deliberately NOT consulted.
+  // This is a light design — the photographs are presented on cream, the way the
+  // studio's work is meant to be seen. Following the operating system meant every
+  // visitor on a dark-mode phone got the night palette and never saw it, which is
+  // not a preference we should infer on their behalf. Dark is one click away and
+  // is remembered once chosen.
+  //
+  // ?theme=light|dark forces one for this page view only, without touching the
+  // visitor's saved choice.
   (function () {
     try {
       var forced = new URLSearchParams(location.search).get('theme');
       var t = (forced === 'light' || forced === 'dark')
         ? forced
-        : localStorage.getItem('sbs-theme');
-      if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        : (localStorage.getItem('sbs-theme') || 'light');
       document.documentElement.setAttribute('data-theme', t);
     } catch (e) {}
   })();

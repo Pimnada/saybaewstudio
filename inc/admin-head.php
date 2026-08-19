@@ -80,11 +80,14 @@ $adminNav = [
 <link rel="stylesheet" href="<?= asset('assets/css/base.css') ?>">
 <link rel="stylesheet" href="<?= asset('assets/css/admin.css') ?>">
 <script>
+  // Light by default, same reasoning as the public site (see inc/header.php):
+  // the operating system's setting is not consulted, so the admin opens in the
+  // palette it was designed in. The toggle remembers a deliberate choice.
   (function () {
     try {
-      var t = localStorage.getItem('sbs-theme');
-      if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.setAttribute(
+        'data-theme', localStorage.getItem('sbs-theme') || 'light'
+      );
     } catch (e) {}
   })();
   window.SBS = { csrf: <?= ejs(csrf_token()) ?>, base: <?= ejs(rtrim(SITE_URL, '/')) ?> };

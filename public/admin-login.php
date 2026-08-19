@@ -51,9 +51,9 @@ if (is_post()) {
 <script>
   (function () {
     try {
-      var t = localStorage.getItem('sbs-theme');
-      if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.setAttribute(
+        'data-theme', localStorage.getItem('sbs-theme') || 'light'
+      );
     } catch (e) {}
   })();
 </script>
