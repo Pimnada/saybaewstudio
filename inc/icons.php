@@ -102,7 +102,7 @@ function icon_paths(): array
     'users' => ['<circle cx="10.5" cy="9" r="2.5"/><path d="M6.5 17C6.5 14.8 8.3 13 10.5 13C12.7 13 14.5 14.8 14.5 17"/><path d="M15 14C15.2 12.5 16.4 11.5 18 11.5C19.5 11.5 20.5 12.5 20.5 14M16.2 7.8C16.2 6.4 17.3 5.3 18.7 5.3C20.1 5.3 21.2 6.4 21.2 7.8"/>', 'stroke'],
     'user' => ['<circle cx="12" cy="8" r="3"/><path d="M6 19C6 15.7 8.7 13 12 13C15.3 13 18 15.7 18 19"/>', 'stroke'],
     'settings' => ['<circle cx="12" cy="12" r="3.2"/><path d="M12 4.5V6M12 18V19.5M4.5 12H6M18 12H19.5M6.7 6.7L7.8 7.8M16.2 16.2L17.3 17.3M17.3 6.7L16.2 7.8M7.8 16.2L6.7 17.3"/><circle cx="12" cy="12" r="7"/>', 'stroke'],
-    'sliders' => ['<path d="M5 7H19M5 12H19M5 17H19"/><circle cx="9" cy="7" r="2" fill="#FFFFFF"/><circle cx="15" cy="12" r="2" fill="#FFFFFF"/><circle cx="11" cy="17" r="2" fill="#FFFFFF"/>', 'stroke'],
+    'sliders' => ['<path d="M5 7H19M5 12H19M5 17H19"/><circle cx="9" cy="7" r="2" fill="var(--surface)"/><circle cx="15" cy="12" r="2" fill="var(--surface)"/><circle cx="11" cy="17" r="2" fill="var(--surface)"/>', 'stroke'],
     'bell' => ['<path d="M7 16V11C7 8.2 9.2 6 12 6C14.8 6 17 8.2 17 11V16L19 18H5L7 16Z"/><path d="M10 20C10.5 20.7 11.2 21 12 21C12.8 21 13.5 20.7 14 20"/>', 'stroke'],
     'message' => ['<path d="M6 6H18C19.1 6 20 6.9 20 8V14C20 15.1 19.1 16 18 16H10L6 19V16H6C4.9 16 4 15.1 4 14V8C4 6.9 4.9 6 6 6Z"/>', 'stroke'],
     'inbox' => ['<path d="M5 9H8L10 13H14L16 9H19V18H5V9Z"/>', 'stroke'],
