@@ -243,6 +243,52 @@ function delete_photo_files(array $photo): void
 }
 
 /**
+ * Remove an album's whole directory tree from disk.
+ *
+ * delete_photo_files() clears the files a photo row knows about, which leaves
+ * two things behind: the empty orig/ preview/ thumb/ folders (rmdir only ever
+ * removes an empty directory, and the album folder still held those three), and
+ * any file whose database row went missing — an upload that landed on disk
+ * before its INSERT failed, for instance. Deleting an album should leave nothing
+ * of it, so the whole tree goes.
+ *
+ * Guarded deliberately: the id must be a positive integer and the resolved path
+ * must sit inside uploads/albums/. A recursive delete driven by anything less
+ * strict than that is one bad variable away from erasing the wrong directory.
+ */
+function delete_album_dir(int $albumId): int
+{
+    if ($albumId <= 0) {
+        return 0;
+    }
+
+    $base = realpath(upload_path('albums'));
+    $dir  = realpath(upload_path('albums/' . $albumId));
+    if ($base === false || $dir === false) {
+        return 0;
+    }
+    if ($dir === $base || !str_starts_with($dir, $base . DIRECTORY_SEPARATOR)) {
+        return 0;                       // นอกขอบเขตที่อนุญาต — ไม่แตะ
+    }
+
+    $removed = 0;
+    $it = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS),
+        RecursiveIteratorIterator::CHILD_FIRST
+    );
+    foreach ($it as $item) {
+        if ($item->isDir()) {
+            @rmdir($item->getPathname());
+        } elseif (@unlink($item->getPathname())) {
+            $removed++;
+        }
+    }
+    @rmdir($dir);
+
+    return $removed;
+}
+
+/**
  * Save a simple one-off image (banner, avatar, article cover) into uploads/$dir
  * and return the path relative to uploads/. Returns null when nothing was sent.
  */

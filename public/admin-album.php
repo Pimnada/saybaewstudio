@@ -50,6 +50,14 @@ if (is_post()) {
         redirect('admin-album.php?id=' . $albumId);
     }
 
+    if ($action === 'publish_now') {
+        $pdo->prepare('UPDATE albums SET status = ?, updated_at = ? WHERE id = ?')
+            ->execute(['published', date('Y-m-d H:i:s'), $albumId]);
+        log_activity('album.publish', $album['title']);
+        flash('เผยแพร่อัลบั้มแล้ว — ขึ้นหน้าผลงานเรียบร้อย');
+        redirect('admin-album.php?id=' . $albumId);
+    }
+
     if ($action === 'update_settings') {
         $access = in_array($_POST['access'] ?? 'public', ['public', 'code', 'hidden'], true)
             ? $_POST['access'] : 'public';
@@ -199,6 +207,28 @@ include __DIR__ . '/../inc/admin-head.php';
 ?>
 
 <h1 class="page-title">จัดการอัลบั้มภาพ</h1>
+
+<?php if ($album['status'] !== 'published'): ?>
+  <?php /* อัลบั้มใหม่เริ่มเป็นร่างเสมอ เพื่อไม่ให้อัลบั้มที่อัปโหลดค้างครึ่งทางโผล่ขึ้นเว็บ
+           แต่เดิมบอกไว้แค่ป้ายเล็ก ๆ กับดรอปดาวน์ในแท็บตั้งค่า ซึ่งมองข้ามได้ง่ายมาก
+           จนอัปโหลดเสร็จแล้วสงสัยว่าทำไมหน้าผลงานไม่ขึ้น */ ?>
+  <div class="alert alert--warn" style="align-items:center;">
+    <?= icon('help', '', 20) ?>
+    <span style="flex:1;">
+      <strong>อัลบั้มนี้ยังเป็นร่าง — ยังไม่แสดงบนหน้าเว็บ</strong><br>
+      <span class="text-sm">
+        มีรูปแล้ว <?= fmt_num($totalPhotos) ?> รูป · กดเผยแพร่เพื่อให้ขึ้นหน้าผลงานทันที
+      </span>
+    </span>
+    <form method="post" style="flex:none;">
+      <?= csrf_field() ?>
+      <input type="hidden" name="action" value="publish_now">
+      <button class="btn btn--primary btn--sm" type="submit">
+        <?= icon('check-circle', '', 16) ?> เผยแพร่เลย
+      </button>
+    </form>
+  </div>
+<?php endif; ?>
 
 <div class="album-hero">
 

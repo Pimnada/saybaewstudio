@@ -46,9 +46,15 @@ if (is_post()) {
         $pdo->prepare('DELETE FROM folders WHERE album_id = ?')->execute([$id]);
         $pdo->prepare('DELETE FROM videos WHERE album_id = ?')->execute([$id]);
         $pdo->prepare('DELETE FROM albums WHERE id = ?')->execute([$id]);
-        @rmdir(upload_path('albums/' . $id));
-        log_activity('album.delete', 'id=' . $id);
-        flash('ลบอัลบั้มเรียบร้อยแล้ว');
+
+        // ลบทั้งต้นไม้ ไม่ใช่แค่ไฟล์ที่มีแถวในฐานข้อมูล — เก็บกวาดโฟลเดอร์ว่าง
+        // และไฟล์กำพร้าที่หลุดมาจากการอัปโหลดที่ล้มกลางคันไปพร้อมกัน
+        $strays = delete_album_dir($id);
+
+        set_setting('storage_bytes_at', '0');
+        log_activity('album.delete', 'id=' . $id . ' · ไฟล์ ' . count($photos)
+            . ($strays > 0 ? ' · เก็บกวาดเพิ่ม ' . $strays : ''));
+        flash('ลบอัลบั้มและไฟล์ทั้งหมดออกจากเซิร์ฟเวอร์เรียบร้อยแล้ว');
         redirect('admin-albums.php');
     }
 
@@ -164,8 +170,9 @@ include __DIR__ . '/../inc/admin-head.php';
             <td class="text-sm"><?= fmt_num((int) $a['photo_count']) ?> / <?= fmt_num((int) $a['video_count']) ?></td>
             <td class="text-sm"><?= fmt_num((int) $a['views']) ?></td>
             <td>
-              <span class="badge badge--<?= $a['status'] === 'published' ? 'ok' : 'muted' ?>">
-                <?= $a['status'] === 'published' ? 'เผยแพร่' : 'ร่าง' ?>
+              <span class="badge badge--<?= $a['status'] === 'published' ? 'ok' : 'warn' ?>"
+                    title="<?= $a['status'] === 'published' ? 'แสดงบนหน้าผลงาน' : 'ยังไม่แสดงบนหน้าเว็บ' ?>">
+                <?= $a['status'] === 'published' ? 'เผยแพร่' : 'ร่าง · ไม่ขึ้นเว็บ' ?>
               </span>
             </td>
             <td>
