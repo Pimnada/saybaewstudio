@@ -65,8 +65,6 @@ if (count($mosaic) < 7) {
     }
 }
 
-$aboutPoints = array_filter(array_map('trim', explode("\n", setting('about_points'))));
-
 $page_title = '';
 $page_desc  = setting('site_description');
 include __DIR__ . '/../inc/header.php';
@@ -210,26 +208,6 @@ include __DIR__ . '/../inc/header.php';
 
     <div class="text-center mt-32">
       <a class="btn btn--primary" href="<?= e(url('albums.php')) ?>">ดูผลงานทั้งหมด</a>
-    </div>
-  </div>
-</section>
-
-<!-- ========================================================== showcase -->
-<section class="section">
-  <div class="wrap showcase">
-    <div class="showcase__shot" data-reveal>
-      <img src="<?= asset('assets/img/admin-preview.svg') ?>"
-           alt="ตัวอย่างหน้าจอระบบจัดการอัลบั้มของสายแบ้วสตูดิโอ" loading="lazy" width="720" height="480">
-    </div>
-
-    <div data-reveal>
-      <span class="eyebrow">ระบบหลังบ้าน</span>
-      <h2><?= e(setting('about_title')) ?></h2>
-      <ul class="check-list">
-        <?php foreach ($aboutPoints as $point): ?>
-          <li><?= icon('check-circle', '', 21) ?><span><?= e($point) ?></span></li>
-        <?php endforeach; ?>
-      </ul>
     </div>
   </div>
 </section>
