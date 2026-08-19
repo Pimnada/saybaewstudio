@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 470" width="720" height="470"
+     font-family="'Noto Sans Thai', sans-serif">
+  <!-- A drawing of the admin dashboard, used in the homepage showcase band.
+       Kept as vector so it stays sharp and needs no screenshot to be refreshed. -->
+  <rect width="720" height="470" rx="12" fill="#FBF8F2"/>
+  <rect x=".5" y=".5" width="719" height="469" rx="12" fill="none" stroke="#E5DCCB"/>
+
+  <!-- sidebar -->
+  <path d="M0 12A12 12 0 0 1 12 0h150v470H12A12 12 0 0 1 0 458z" fill="#17140F"/>
+  <circle cx="34" cy="32" r="12" fill="none" stroke="#B0803A" stroke-width="2"/>
+  <circle cx="34" cy="32" r="4.5" fill="none" stroke="#B0803A" stroke-width="2"/>
+  <text x="54" y="30" fill="#fff" font-size="12" font-weight="700">สายแบ้วสตูดิโอ</text>
+  <text x="54" y="43" fill="#B0803A" font-size="7.5" letter-spacing="1.6">SAYBAEWSTUDIO</text>
+
+  <rect x="10" y="62" width="142" height="26" rx="7" fill="#B0803A" opacity=".16"/>
+  <rect x="18" y="72" width="9" height="7" rx="1.6" fill="#D0A55E"/>
+  <text x="36" y="79" fill="#D0A55E" font-size="10.5">แดชบอร์ด</text>
+
+  <g fill="#8A8073" font-size="10.5">
+    <rect x="18" y="100" width="9" height="7" rx="1.6" fill="#5B5449"/><text x="36" y="107">อัลบั้มภาพ</text>
+    <rect x="18" y="126" width="9" height="7" rx="1.6" fill="#5B5449"/><text x="36" y="133">อัลบั้มวิดีโอ</text>
+    <rect x="18" y="152" width="9" height="7" rx="1.6" fill="#5B5449"/><text x="36" y="159">จัดการหน้าเว็บ</text>
+    <rect x="18" y="178" width="9" height="7" rx="1.6" fill="#5B5449"/><text x="36" y="185">บทความ</text>
+    <rect x="18" y="204" width="9" height="7" rx="1.6" fill="#5B5449"/><text x="36" y="211">รีวิวจากลูกค้า</text>
+    <rect x="18" y="230" width="9" height="7" rx="1.6" fill="#5B5449"/><text x="36" y="237">ข้อความจากลูกค้า</text>
+    <rect x="18" y="256" width="9" height="7" rx="1.6" fill="#5B5449"/><text x="36" y="263">สถิติการเข้าชม</text>
+    <rect x="18" y="282" width="9" height="7" rx="1.6" fill="#5B5449"/><text x="36" y="289">ตั้งค่าเว็บไซต์</text>
+  </g>
+
+  <!-- storage meter -->
+  <rect x="14" y="404" width="134" height="46" rx="8" fill="#211D17"/>
+  <text x="24" y="421" fill="#8A8073" font-size="8.5">พื้นที่ใช้งาน</text>
+  <text x="24" y="434" fill="#fff" font-size="9.5" font-weight="700">28.45 GB / 100 GB</text>
+  <rect x="24" y="440" width="114" height="5" rx="2.5" fill="#332D25"/>
+  <rect x="24" y="440" width="32" height="5" rx="2.5" fill="#B0803A"/>
+
+  <!-- topbar -->
+  <rect x="162" y="0" width="558" height="46" fill="#fff"/>
+  <line x1="162" y1="46" x2="720" y2="46" stroke="#E5DCCB"/>
+  <g stroke="#7C7267" stroke-width="1.6" stroke-linecap="round">
+    <path d="M180 18h14M180 23h14M180 28h14"/>
+  </g>
+  <rect x="536" y="12" width="78" height="23" rx="6" fill="#fff" stroke="#E5DCCB"/>
+  <text x="551" y="27" fill="#4A4238" font-size="9.5">ดูเว็บไซต์</text>
+  <circle cx="634" cy="23" r="9" fill="#F3E8D6"/>
+  <circle cx="640" cy="17" r="4.5" fill="#C8443A"/>
+  <text x="640" y="20" fill="#fff" font-size="6" text-anchor="middle" font-weight="700">3</text>
+  <circle cx="668" cy="23" r="11" fill="#DCD0BA"/>
+  <text x="686" y="21" fill="#241F19" font-size="9" font-weight="700">Saybaew</text>
+  <text x="686" y="31" fill="#9A9186" font-size="7.5">ผู้ดูแลระบบ</text>
+
+  <!-- page title -->
+  <text x="182" y="76" fill="#241F19" font-size="15" font-weight="700">แดชบอร์ด</text>
+
+  <!-- stat tiles -->
+  <g>
+    <rect x="182" y="90" width="123" height="62" rx="9" fill="#fff" stroke="#E5DCCB"/>
+    <text x="194" y="110" fill="#7C7267" font-size="8.5">ผู้เข้าชมทั้งหมด</text>
+    <text x="194" y="131" fill="#241F19" font-size="18" font-weight="700">12,845</text>
+    <text x="194" y="144" fill="#2E9E5B" font-size="8">+15.2%</text>
+
+    <rect x="315" y="90" width="123" height="62" rx="9" fill="#fff" stroke="#E5DCCB"/>
+    <text x="327" y="110" fill="#7C7267" font-size="8.5">ผู้ชมวันนี้</text>
+    <text x="327" y="131" fill="#241F19" font-size="18" font-weight="700">1,236</text>
+
+    <rect x="448" y="90" width="123" height="62" rx="9" fill="#fff" stroke="#E5DCCB"/>
+    <text x="460" y="110" fill="#7C7267" font-size="8.5">ยอดดาวน์โหลด</text>
+    <text x="460" y="131" fill="#241F19" font-size="18" font-weight="700">4,593</text>
+
+    <rect x="581" y="90" width="123" height="62" rx="9" fill="#fff" stroke="#E5DCCB"/>
+    <text x="593" y="110" fill="#7C7267" font-size="8.5">อัลบั้มทั้งหมด</text>
+    <text x="593" y="131" fill="#241F19" font-size="18" font-weight="700">68</text>
+  </g>
+
+  <!-- chart card -->
+  <rect x="182" y="164" width="256" height="150" rx="9" fill="#fff" stroke="#E5DCCB"/>
+  <text x="194" y="184" fill="#241F19" font-size="10" font-weight="700">ผู้เข้าชม 30 วันล่าสุด</text>
+  <g fill="#B0803A" opacity=".85">
+    <rect x="196" y="266" width="12" height="32" rx="2.5"/>
+    <rect x="216" y="252" width="12" height="46" rx="2.5"/>
+    <rect x="236" y="238" width="12" height="60" rx="2.5"/>
+    <rect x="256" y="258" width="12" height="40" rx="2.5"/>
+    <rect x="276" y="226" width="12" height="72" rx="2.5"/>
+    <rect x="296" y="244" width="12" height="54" rx="2.5"/>
+    <rect x="316" y="212" width="12" height="86" rx="2.5"/>
+    <rect x="336" y="232" width="12" height="66" rx="2.5"/>
+    <rect x="356" y="204" width="12" height="94" rx="2.5"/>
+    <rect x="376" y="222" width="12" height="76" rx="2.5"/>
+    <rect x="396" y="196" width="12" height="102" rx="2.5"/>
+    <rect x="416" y="216" width="12" height="82" rx="2.5"/>
+  </g>
+  <line x1="194" y1="299" x2="426" y2="299" stroke="#E5DCCB"/>
+
+  <!-- recent albums -->
+  <rect x="448" y="164" width="256" height="150" rx="9" fill="#fff" stroke="#E5DCCB"/>
+  <text x="460" y="184" fill="#241F19" font-size="10" font-weight="700">อัลบั้มล่าสุด</text>
+  <g>
+    <rect x="460" y="194" width="34" height="24" rx="4" fill="#DCD0BA"/>
+    <text x="502" y="205" fill="#241F19" font-size="9">เวทีการแสดงโรงเรียนอนุบาล</text>
+    <text x="502" y="216" fill="#9A9186" font-size="7.5">12 พ.ค. 2567 · 256 รูป</text>
+
+    <rect x="460" y="228" width="34" height="24" rx="4" fill="#DCD0BA"/>
+    <text x="502" y="239" fill="#241F19" font-size="9">วันเกิดน้องอิงฟ้า</text>
+    <text x="502" y="250" fill="#9A9186" font-size="7.5">20 เม.ย. 2567 · 184 รูป</text>
+
+    <rect x="460" y="262" width="34" height="24" rx="4" fill="#DCD0BA"/>
+    <text x="502" y="273" fill="#241F19" font-size="9">รับใบประกาศปลายภาค</text>
+    <text x="502" y="284" fill="#9A9186" font-size="7.5">15 มี.ค. 2567 · 132 รูป</text>
+  </g>
+
+  <!-- photo grid strip -->
+  <rect x="182" y="326" width="522" height="126" rx="9" fill="#fff" stroke="#E5DCCB"/>
+  <text x="194" y="346" fill="#241F19" font-size="10" font-weight="700">รูปที่อัปโหลดล่าสุด</text>
+  <g fill="#DCD0BA">
+    <rect x="194" y="356" width="80" height="58" rx="6"/>
+    <rect x="282" y="356" width="80" height="58" rx="6"/>
+    <rect x="370" y="356" width="80" height="58" rx="6"/>
+    <rect x="458" y="356" width="80" height="58" rx="6"/>
+    <rect x="546" y="356" width="80" height="58" rx="6"/>
+    <rect x="634" y="356" width="58" height="58" rx="6"/>
+  </g>
+  <g fill="#C6B79E">
+    <circle cx="216" cy="376" r="6"/><circle cx="304" cy="376" r="6"/><circle cx="392" cy="376" r="6"/>
+    <circle cx="480" cy="376" r="6"/><circle cx="568" cy="376" r="6"/><circle cx="652" cy="376" r="6"/>
+  </g>
+  <text x="194" y="435" fill="#9A9186" font-size="8">อัปโหลดพร้อมกันได้หลายร้อยรูป ระบบย่อภาพและสร้างตัวอย่างให้อัตโนมัติ</text>
+</svg>

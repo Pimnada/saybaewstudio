@@ -30,13 +30,25 @@
   --line:        #E5DCCB;
   --line-soft:   #EFE8DA;
 
-  /* the permanently dark bands used on the marketing pages */
+  /* Always dark, in both themes: the admin sidebar, the lightbox, the chat
+     header. These are chrome that is dark by design, not by palette. */
   --dark:        #17140F;
   --dark-2:      #201C16;
   --dark-3:      #2B2620;
   --dark-line:   #383129;
   --on-dark:     #F4EFE6;
   --on-dark-mute:#A79C8C;
+
+  /* The big marketing bands — hero, albums, reviews, contact, footer.
+     Separate from --dark on purpose: these follow the theme, so in light mode
+     the page is actually light rather than a white strip on top of a black
+     page. Reusing --dark for both would have turned the admin sidebar white. */
+  --band:        #FFFFFF;
+  --band-2:      #FBF8F2;
+  --band-3:      #F1EBDF;
+  --band-line:   #E5DCCB;
+  --on-band:     #241F19;
+  --on-band-mute:#7C7267;
 
   /* status */
   --ok:          #2E9E5B;
@@ -87,6 +99,15 @@
   --dark-2:      #17140F;
   --dark-3:      #221E18;
   --dark-line:   #332D25;
+
+  /* At night the bands go back to being dark — same values the whole design
+     was drawn against. */
+  --band:        #17140F;
+  --band-2:      #201C16;
+  --band-3:      #2B2620;
+  --band-line:   #383129;
+  --on-band:     #F4EFE6;
+  --on-band-mute:#A79C8C;
 
   --gold-100:    #362B18;
   --ok-bg:       #16281D;
@@ -152,8 +173,11 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 28px 0; }
 
 .section { padding: 72px 0; }
 .section--tight { padding: 48px 0; }
-.section--dark { background: var(--dark); color: var(--on-dark); }
-.section--dark h1, .section--dark h2, .section--dark h3 { color: var(--on-dark); }
+/* "dark" is the band's role in the layout, not a fixed colour — it follows the
+   theme like the rest of the page. The class name stays so the markup does not
+   churn; the tokens behind it are what moved. */
+.section--dark { background: var(--band); color: var(--on-band); }
+.section--dark h1, .section--dark h2, .section--dark h3 { color: var(--on-band); }
 .section--cream { background: var(--bg-2); }
 
 .section-head { text-align: center; margin-bottom: 40px; }
@@ -230,9 +254,9 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 28px 0; }
 
 /* On a dark band a "light" button must not turn into a hole. */
 .section--dark .btn--light,
-.hero .btn--light { background: transparent; border-color: rgba(255,255,255,.35); color: #fff; }
+.hero .btn--light { background: transparent; border-color: var(--band-line); color: var(--on-band); }
 .section--dark .btn--light:hover,
-.hero .btn--light:hover { background: rgba(255,255,255,.1); border-color: #fff; color: #fff; }
+.hero .btn--light:hover { background: var(--band-3); border-color: var(--on-band); color: var(--on-band); }
 
 /* --------------------------------------------------------------- brand --- */
 /* The wordmark sits on a dark bar on both the public site and the admin
