@@ -248,7 +248,10 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 28px 0; }
   color: var(--gold);
 }
 .brand__mark svg { width: 21px; height: 21px; }
-.brand__name { font-size: 16px; font-weight: 700; color: #fff; line-height: 1.25; }
+/* Follows the surface it sits on: the masthead is white in light mode and dark
+   at night, and the admin sidebar is dark in both. */
+.brand__name { font-size: 16px; font-weight: 700; color: var(--ink); line-height: 1.25; }
+.side__brand .brand__name { color: #fff; }
 .brand__sub {
   font-size: 10.5px;
   letter-spacing: 2.2px;

@@ -5,13 +5,17 @@
 
 /* -------------------------------------------------------------- header --- */
 
+/* The masthead follows the theme rather than being permanently dark: white in
+   light mode, dark at night. Every colour inside it therefore has to be a token
+   too — a hard-coded #fff on the logo or the nav was invisible the moment the
+   bar behind it turned white. */
 .site-header {
   position: sticky;
   top: 0;
   z-index: 200;
-  background: color-mix(in srgb, var(--dark) 96%, transparent);
+  background: color-mix(in srgb, var(--surface) 96%, transparent);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--dark-line);
+  border-bottom: 1px solid var(--line);
 }
 .site-header__inner {
   height: var(--header-h);
@@ -28,10 +32,10 @@
   border-radius: var(--r-xs);
   font-size: 14.5px;
   font-weight: 600;
-  color: rgba(255,255,255,.82);
+  color: var(--ink-2);
   transition: color .16s var(--ease), background .16s var(--ease);
 }
-.nav a:hover { color: #fff; background: rgba(255,255,255,.08); }
+.nav a:hover { color: var(--gold); background: var(--gold-100); }
 .nav a.is-active { color: var(--gold-300); }
 
 .header-actions { display: flex; align-items: center; gap: 10px; flex: none; }
@@ -39,10 +43,10 @@
 .theme-toggle {
   width: 38px; height: 38px;
   display: grid; place-items: center;
-  border: 1px solid rgba(255,255,255,.22);
+  border: 1px solid var(--line);
   border-radius: var(--r-xs);
   background: transparent;
-  color: rgba(255,255,255,.85);
+  color: var(--ink-2);
   cursor: pointer;
   transition: border-color .16s var(--ease), color .16s var(--ease);
 }
@@ -54,27 +58,27 @@
   width: 40px; height: 40px;
   place-items: center;
   background: transparent;
-  border: 1px solid rgba(255,255,255,.22);
+  border: 1px solid var(--line);
   border-radius: var(--r-xs);
-  color: #fff;
+  color: var(--ink);
   cursor: pointer;
 }
 
 .mobile-nav {
   display: none;
-  background: var(--dark-2);
-  border-top: 1px solid var(--dark-line);
+  background: var(--surface);
+  border-top: 1px solid var(--line);
   padding: 12px 0 18px;
 }
 .mobile-nav.is-open { display: block; }
 .mobile-nav a {
   display: block;
   padding: 11px 24px;
-  color: rgba(255,255,255,.85);
+  color: var(--ink-2);
   font-weight: 600;
   border-radius: var(--r-xs);
 }
-.mobile-nav a:hover { background: rgba(255,255,255,.07); color: #fff; }
+.mobile-nav a:hover { background: var(--gold-100); color: var(--gold); }
 .mobile-nav .btn { margin: 10px 24px 0; }
 
 /* ---------------------------------------------------------------- hero --- */
