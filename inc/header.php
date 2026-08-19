@@ -130,7 +130,10 @@ $headerMenu = db()->query(
         <?= icon('sun', 'icon-sun') ?><?= icon('moon', 'icon-moon') ?>
       </button>
       <a class="btn btn--ghost btn--sm" href="<?= e(url('albums.php')) ?>">ดูอัลบั้ม</a>
-      <a class="btn btn--line btn--sm" href="<?= e($lineUrl) ?>" target="_blank" rel="noopener">
+      <?php /* Gold, not LINE green — the mockup keeps the masthead in the brand
+               palette and saves the green for the floating button in the corner,
+               so the header reads as one gold pair rather than a traffic light. */ ?>
+      <a class="btn btn--primary btn--sm" href="<?= e($lineUrl) ?>" target="_blank" rel="noopener">
         <?= icon('line', '', 18) ?> คุยทาง LINE
       </a>
       <button class="burger" type="button" data-burger aria-label="เปิดเมนู" aria-expanded="false">

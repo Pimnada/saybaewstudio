@@ -85,10 +85,17 @@
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
   gap: 48px;
   align-items: center;
-  padding: 60px 0 0;
+  /* padding-top only. The shorthand wipes .wrap's horizontal padding,
+     which pushed the content flush against both screen edges on any
+     viewport at or below --max. */
+  padding-top: 60px;
 }
 .hero__copy { padding-bottom: 60px; }
-.hero h1 { color: #fff; margin-bottom: 18px; max-width: 15ch; }
+/* 26ch, not 15ch: the mockup sets the headline on two lines —
+   "พอร์ตภาพเด็กและงานกิจกรรม" / "ที่ดูดี น่าเชื่อถือ และพร้อมแชร์ต่อ" —
+   and a 15ch measure broke it into four, which changes the whole balance of
+   the hero against the photo mosaic beside it. */
+.hero h1 { color: #fff; margin-bottom: 18px; max-width: 26ch; }
 .hero__text { color: var(--on-dark-mute); font-size: 15px; max-width: 46ch; margin-bottom: 30px; }
 .hero__cta { display: flex; gap: 12px; flex-wrap: wrap; }
 
@@ -114,7 +121,8 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 10px;
-  padding: 20px 0;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 .hero-chip { display: flex; align-items: center; gap: 12px; padding: 6px 4px; }
 .hero-chip__icon {
@@ -337,7 +345,8 @@
   grid-template-columns: .85fr 1.15fr;
   gap: 40px;
   align-items: start;
-  padding: 56px 0;
+  padding-top: 56px;
+  padding-bottom: 56px;
 }
 .contact-panel {
   background: var(--dark-2);

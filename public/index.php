@@ -29,8 +29,10 @@ $reviews = $pdo->query(
     "SELECT * FROM reviews WHERE status = 'published' ORDER BY sort_order LIMIT 6"
 )->fetchAll();
 
+// Four on the homepage, as in the mockup — two rows of two. The rest live on
+// contact.php; the homepage is not the place to answer every question.
 $faqs = $pdo->query(
-    "SELECT * FROM faqs WHERE status = 'published' ORDER BY sort_order LIMIT 6"
+    "SELECT * FROM faqs WHERE status = 'published' ORDER BY sort_order LIMIT 4"
 )->fetchAll();
 
 /**
