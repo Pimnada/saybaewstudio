@@ -16,6 +16,19 @@ require_once __DIR__ . '/icons.php';
  */
 boot_session();
 
+/**
+ * Never let a browser reuse a cached copy of one of these pages.
+ *
+ * Every page carries a CSRF token and the inline script that decides the
+ * theme, so a stale copy hands out a token the session no longer accepts and
+ * keeps running whatever theme logic shipped that day — which is exactly how a
+ * theme fix can look like it did not work at all on the one machine that has
+ * the old page cached. The markup is generated per request anyway; there is
+ * nothing here worth a browser holding on to.
+ */
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+
 $siteName  = setting('site_name', 'สายแบ้วสตูดิโอ');
 $pageTitle = isset($page_title) && $page_title !== ''
     ? $page_title . ' — ' . $siteName
@@ -50,7 +63,7 @@ $headerMenu = db()->query(
 
 <link rel="canonical" href="<?= e(url(current_path())) ?>">
 <link rel="icon" href="<?= asset('assets/img/favicon.svg') ?>" type="image/svg+xml">
-<link rel="apple-touch-icon" href="<?= asset('assets/img/favicon.svg') ?>">
+<link rel="apple-touch-icon" href="<?= asset('assets/img/apple-touch-icon.png') ?>">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

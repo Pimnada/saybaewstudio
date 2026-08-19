@@ -12,6 +12,11 @@ require_once __DIR__ . '/icons.php';
 $user = require_admin();
 $here = current_path();
 
+// Admin pages are per-user and every one of them carries a CSRF token, so a
+// cached copy is never useful and is actively harmful. See inc/header.php.
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+
 /**
  * Walking uploads/ costs real time once an album holds a few thousand files,
  * so the total is cached for ten minutes in settings.
