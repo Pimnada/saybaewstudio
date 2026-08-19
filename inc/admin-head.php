@@ -34,6 +34,8 @@ function storage_used_bytes(): int
     return $bytes;
 }
 
+$newMessages = (int) db()->query("SELECT COUNT(*) FROM messages WHERE status = 'new'")->fetchColumn();
+
 $quotaBytes = (int) (STORAGE_QUOTA_GB * 1024 * 1024 * 1024);
 $usedBytes  = storage_used_bytes();
 $usedPct    = $quotaBytes > 0 ? min(100, round($usedBytes / $quotaBytes * 100, 1)) : 0;
@@ -57,6 +59,7 @@ $adminNav = [
         ['admin-services.php', 'ประเภทงาน',       'folder'],
     ],
     'ลูกค้า' => [
+        ['admin-messages.php',  'ข้อความจากลูกค้า',   'inbox',   'messages'],
         ['admin-chat.php',      'ระบบแชท',           'message'],
         ['admin-emails.php',    'อีเมลที่ส่งออก',      'mail'],
     ],
@@ -114,6 +117,9 @@ $adminNav = [
         <a class="side__link <?= $here === $link[0] ? 'is-active' : '' ?>" href="<?= e(url($link[0])) ?>">
           <?= icon($link[2]) ?>
           <span><?= e($link[1]) ?></span>
+          <?php if (($link[3] ?? '') === 'messages' && $newMessages > 0): ?>
+            <span class="side__badge"><?= $newMessages ?></span>
+          <?php endif; ?>
         </a>
       <?php endforeach; ?>
     <?php endforeach; ?>
@@ -149,6 +155,11 @@ $adminNav = [
     <button class="icon-btn" type="button" data-theme-toggle aria-label="สลับโหมดกลางวัน/กลางคืน">
       <?= icon('sun', 'icon-sun') ?><?= icon('moon', 'icon-moon') ?>
     </button>
+
+    <a class="icon-btn" href="<?= e(url('admin-messages.php')) ?>" aria-label="การแจ้งเตือน">
+      <?= icon('bell') ?>
+      <?php if ($newMessages > 0): ?><span class="icon-btn__dot"><?= $newMessages ?></span><?php endif; ?>
+    </a>
 
     <div class="dropdown" data-dropdown>
       <button class="who" type="button" data-dropdown-toggle>

@@ -21,12 +21,12 @@ echo em_panel(
     . em_row('รายละเอียด', $detail ?? '')
 );
 
-// The inbox page was removed when chat moved to tobwai, so this letter IS the
-// record of the enquiry — reply to it directly rather than linking to a page
-// that no longer exists.
+echo em_button('เปิดในหน้าแอดมิน', url('admin-messages.php?id=' . (int) ($message_id ?? 0)));
+// A direct reply route as well — on a phone, tapping through to the admin to
+// then copy an address is three steps too many.
 if (!empty($email)) {
-    echo em_button('ตอบกลับลูกค้าทางอีเมล', 'mailto:' . $email);
+    echo em_button_ghost('ตอบกลับลูกค้าทางอีเมล', 'mailto:' . $email);
 } elseif (!empty($phone)) {
-    echo em_button('โทรกลับหาลูกค้า', 'tel:' . preg_replace('/[^0-9+]/', '', $phone));
+    echo em_button_ghost('โทรกลับหาลูกค้า', 'tel:' . preg_replace('/[^0-9+]/', '', $phone));
 }
 echo em_p('<span style="font-size:13px;color:#7C7267;">ตอบกลับภายใน 1 ชั่วโมงในเวลาทำการช่วยให้ลูกค้าตัดสินใจจองคิวได้เร็วขึ้นมาก</span>');
